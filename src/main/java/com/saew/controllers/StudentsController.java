@@ -1,10 +1,16 @@
 package com.saew.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,37 +22,49 @@ public class StudentsController {
     
     
     public List<Student> getAllStudents() {
-        //TODO: Implement the method
-        throw new UnsupportedOperationException();
+
+        return studentRepository.findAll();
     }
     
 
     
     public List<Student> getStudentByName(String name) {    
-        //TODO: Implement the method
-        throw new UnsupportedOperationException();
+        return studentRepository.findByName(name);
     }
        
-    public ResponseEntity<Student> getStudentById(String id) {
-        //TODO: Implement the method
-        throw new UnsupportedOperationException();
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Student> getStudentById(@PathVariable String id) {
+        Optional<Student> optStudent = studentRepository.findById(Integer.parseInt(id));
+
+        if(optStudent.isPresent()){
+         // return optProdcut.get();
+         return ResponseEntity.ok(optStudent.get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(Student student) {
-        //TODO: Implement the method
-        throw new UnsupportedOperationException();
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+        studentRepository.save(student);
+      return ResponseEntity.ok(student);
     }
 
+
+
     @PatchMapping
-    public ResponseEntity<Student> updateProduct(Student product) {
-        //TODO: Implement the method
-        throw new UnsupportedOperationException();   
+    public ResponseEntity<Student> updateProduct(@RequestBody Student student) {
+         studentRepository.save(student);
+      return ResponseEntity.ok(student);
     }
     
-    public ResponseEntity<Student> deleteStudent(String id) {
-        //TODO: Implement the method
-        throw new UnsupportedOperationException();   
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Student> deleteStudent(@PathVariable String id) {
+       studentRepository.deleteById(Integer.parseInt(id));
+        return ResponseEntity.status(HttpStatus.OK).build();  
     }
 
     
